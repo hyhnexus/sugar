@@ -1,0 +1,41 @@
+apply plugin: 'com.android.library'
+
+apply plugin: 'com.novoda.bintray-release'
+
+android {
+    compileSdkVersion 26
+    buildToolsVersion "26.0.2"
+
+    defaultConfig {
+        minSdkVersion 14
+        targetSdkVersion 26
+        versionCode 1
+        versionName "1.0.0"
+    }
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+    testOptions {
+        unitTests.returnDefaultValues = true
+    }
+    lintOptions {
+        abortOnError false
+    }
+}
+
+dependencies {
+    testImplementation 'junit:junit:4.12'
+    testImplementation 'org.robolectric:robolectric:3.0'
+}
+
+publish {
+    userOrg = 'hyhnexus'
+    groupId = 'com.github.hyhnexus'
+    artifactId = 'sugar'
+    publishVersion = '1.0.0'
+    desc = 'Sugar ORM - Insanely easy way to work with android database'
+    website = 'https://github.com/hyhnexus/sugar'
+}
