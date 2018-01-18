@@ -9,17 +9,16 @@ import java.util.Map;
 import java.util.WeakHashMap;
 
 public class SugarContext {
-
     private static SugarDbConfiguration dbConfiguration = null;
     private static SugarContext instance = null;
     private SugarDb sugarDb;
     private Map<Object, Long> entitiesMap;
 
-    private SugarContext() {
-        this.sugarDb = SugarDb.getInstance();
+    private SugarContext(Class<?>[] classes) {
+        this.sugarDb = SugarDb.getInstance(classes);
         this.entitiesMap = Collections.synchronizedMap(new WeakHashMap<Object, Long>());
     }
-    
+
     public static SugarContext getSugarContext() {
         if (instance == null) {
             throw new NullPointerException("SugarContext has not been initialized properly. Call SugarContext.init(Context) in your Application.onCreate() method and SugarContext.terminate() in your Application.onTerminate() method.");
@@ -27,17 +26,16 @@ public class SugarContext {
         return instance;
     }
 
-    public static void init(Context context) {
+    public static void init(Context context, Class<?>[] classes) {
         ContextUtil.init(context);
-        instance = new SugarContext();
+        instance = new SugarContext(classes);
         dbConfiguration = null;
     }
 
-    public static void init(Context context, SugarDbConfiguration configuration) {
-        init(context);
+    public static void init(Context context, SugarDbConfiguration configuration, Class<?>[] classes) {
+        init(context, classes);
         dbConfiguration = configuration;
     }
-
 
     public static void terminate() {
         if (instance == null) {

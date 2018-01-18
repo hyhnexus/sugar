@@ -19,20 +19,22 @@ public class SugarDb extends SQLiteOpenHelper {
     private final SchemaGenerator schemaGenerator;
     private SQLiteDatabase sqLiteDatabase;
     private int openedConnections = 0;
+    private Class<?>[] mClasses;
 
     //Prevent instantiation
-    private SugarDb() {
+    private SugarDb(Class<?>[] classes) {
         super(getContext(), getDbName(), new SugarCursorFactory(ManifestHelper.isDebugEnabled()), getDatabaseVersion());
+        this.mClasses = classes;
         schemaGenerator = SchemaGenerator.getInstance();
     }
 
-    public static SugarDb getInstance() {
-        return new SugarDb();
+    public static SugarDb getInstance(Class<?>[] classes) {
+        return new SugarDb(classes);
     }
 
     @Override
     public void onCreate(SQLiteDatabase sqLiteDatabase) {
-        schemaGenerator.createDatabase(sqLiteDatabase);
+        schemaGenerator.createDatabase(sqLiteDatabase, mClasses);
     }
 
     @Override

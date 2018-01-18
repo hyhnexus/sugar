@@ -2,12 +2,15 @@ package com.orm;
 
 import android.app.Application;
 
+/**
+ * Use {@link SugarContext.init()} instead
+ */
+@Deprecated
 public class SugarApp extends Application {
-
     @Override
     public void onCreate() {
         super.onCreate();
-        SugarContext.init(this);
+        SugarContext.init(this, null);
     }
 
     @Override
@@ -15,5 +18,4 @@ public class SugarApp extends Application {
         super.onTerminate();
         SugarContext.terminate();
     }
-
 }

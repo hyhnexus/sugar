@@ -44,9 +44,9 @@ public class SchemaGenerator {
         return new SchemaGenerator();
     }
 
-    public void createDatabase(SQLiteDatabase sqLiteDatabase) {
-        List<Class> domainClasses = getDomainClasses();
-        for (Class domain : domainClasses) {
+    public void createDatabase(SQLiteDatabase sqLiteDatabase, Class<?>[] classes) {
+//        List<Class> domainClasses = getDomainClasses();
+        for (Class domain : classes) {
             createTable(domain, sqLiteDatabase);
             afterTableCreated(domain,sqLiteDatabase);
         }
@@ -262,7 +262,7 @@ public class SchemaGenerator {
         if (table.isAnnotationPresent(MultiUnique.class)) {
             String constraint = table.getAnnotation(MultiUnique.class).value();
 
-            sb.append(", UNIQUE(");
+            sb.append(", PRIMARY KEY (");
 
             String[] constraintFields = constraint.split(",");
             for(int i = 0; i < constraintFields.length; i++) {
