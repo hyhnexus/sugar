@@ -215,7 +215,8 @@ public class SchemaGenerator {
         }
 
         StringBuilder sb = new StringBuilder("CREATE TABLE IF NOT EXISTS ");
-        sb.append(tableName).append(" (");
+        sb.append(tableName).append(" (ID INTEGER PRIMARY KEY AUTOINCREMENT");
+
         for (Field column : fields) {
             String columnName = NamingHelper.toColumnName(column);
             String columnType = QueryBuilder.getColumnType(column.getType());
@@ -229,7 +230,7 @@ public class SchemaGenerator {
                     Column columnAnnotation = column.getAnnotation(Column.class);
                     columnName = columnAnnotation.name();
 
-                    sb.append(columnName).append(" ").append(columnType);
+                    sb.append(", ").append(columnName).append(" ").append(columnType);
 
                     if (columnAnnotation.notNull()) {
                         if (columnType.endsWith(NULL)) {
@@ -241,9 +242,9 @@ public class SchemaGenerator {
                     if (columnAnnotation.unique()) {
                         sb.append(UNIQUE);
                     }
-                    sb.append(", ");
+
                 } else {
-                    sb.append(columnName).append(" ").append(columnType);
+                    sb.append(", ").append(columnName).append(" ").append(columnType);
 
                     if (column.isAnnotationPresent(NotNull.class)) {
                         if (columnType.endsWith(NULL)) {
@@ -255,7 +256,6 @@ public class SchemaGenerator {
                     if (column.isAnnotationPresent(Unique.class)) {
                         sb.append(UNIQUE);
                     }
-                    sb.append(", ");
                 }
             }
         }
@@ -263,7 +263,7 @@ public class SchemaGenerator {
         if (table.isAnnotationPresent(MultiUnique.class)) {
             String constraint = table.getAnnotation(MultiUnique.class).value();
 
-            sb.append("PRIMARY KEY(");
+            sb.append(", UNIQUE(");
 
             String[] constraintFields = constraint.split(",");
             for (int i = 0; i < constraintFields.length; i++) {
@@ -275,10 +275,10 @@ public class SchemaGenerator {
                 }
             }
 
-            sb.append(") ON CONFLICT REPLACE)");
-        } else {
-            sb.append("ID INTEGER PRIMARY KEY AUTOINCREMENT)");
+            sb.append(") ON CONFLICT REPLACE");
         }
+
+        sb.append(")");
 
         if (ManifestHelper.isDebugEnabled()) {
             Log.i(SUGAR, "Creating table " + tableName);

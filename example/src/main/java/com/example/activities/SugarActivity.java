@@ -17,11 +17,6 @@ public class SugarActivity extends Activity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main);
-        TestEntity entity = new TestEntity();
-        entity.setKid("0");
-        entity.setKname("test");
-        entity.setUpdate_time(System.currentTimeMillis() / 1000);
-        SugarRecord.update(entity);
     }
 
     public void insert1(View view) {
